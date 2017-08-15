@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>lwp Jet Fuel</title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='styles.css' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Oxygen:700' rel='stylesheet'>
+  </head>
+  <body>
+    <header>
+      <h1 class='page-title'>JET FUEL</h1>
+      <p class='page-subtitle'>URL Shortener</p>
+    </header>
+    <main>
+      <h2 class='section-title'>CREATE</h2>
+      <div class='create-pane'>
+        <form class='create-folder-form' action='index.html' method='post'>
+          <h3>Create a New Folder</h3>
+          <input type='text' name='new-folder' value='' placeholder='Name'>
+          <button type='submit' name='button'>Create Folder</button>
+        </form>
+        <form class='shorten-url-form' action='index.html' method='post'>
+          <h3>Shorten & Save a Link</h3>
+          <input type='text' name='label' value='' placeholder='Label'>
+          <input type='text' name='long-url' value='' placeholder='Link'>
+          <button type='button' name='button'>Shorten & Save</button>
+        </form>
+      </div>
+      <h2 class='section-title'>VIEW</h2>
+      <div class='folder-pane'>
+        <p class='view-folder-name'>FolderName</p>
+        <table>
+          <tr>
+            <td class='view-link-title'>Some Title</td>
+            <td class='view-link-shortUrl'>jetfuel.com/3G9d9W</td>
+            <td class='view-link-date'>Aug 13</td>
+          </tr>
+          <tr>
+            <td class='view-link-title'>Some Title</td>
+            <td class='view-link-shortUrl'>jetfuel.com/3G9d9W</td>
+            <td class='view-link-date'>Aug 13</td>
+          </tr>
+          <tr>
+            <td class='view-link-title'>Some Title</td>
+            <td class='view-link-shortUrl'>jetfuel.com/3G9d9W</td>
+            <td class='view-link-date'>Aug 13</td>
+          </tr>
+          <tr>
+            <td class='view-link-title'>Some Title</td>
+            <td class='view-link-shortUrl'>jetfuel.com/3G9d9W</td>
+            <td class='view-link-date'>Aug 13</td>
+          </tr>
+          <tr>
+            <td class='view-link-title'>Some Title</td>
+            <td class='view-link-shortUrl'>jetfuel.com/3G9d9W</td>
+            <td class='view-link-date'>Aug 13</td>
+          </tr>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
