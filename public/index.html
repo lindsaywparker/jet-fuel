@@ -6,6 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' href='styles.css' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Oxygen:700' rel='stylesheet'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
   <body>
     <header>
@@ -17,8 +18,8 @@
       <div class='create-pane'>
         <form class='create-folder-form' action='index.html' method='post'>
           <h3>Create a New Folder</h3>
-          <input type='text' name='new-folder' value='' placeholder='Name'>
-          <button type='submit' name='button'>Create Folder</button>
+          <input type='text' class='new-folder-input' name='new-folder' value='' placeholder='Name'>
+          <button type='submit' class='new-folder-button' name='button'>Create Folder</button>
         </form>
         <form class='shorten-url-form' action='index.html' method='post'>
           <h3>Shorten & Save a Link</h3>
@@ -63,5 +64,6 @@
         </table>
       </div>
     </main>
+    <script src='scripts.js'></script>
   </body>
 </html>
