@@ -9,7 +9,7 @@ const emptyFolderInput = () => {
 const createFolder = (e) => {
   e.preventDefault();
   const folderName = $('.new-folder-input').val();
-  console.log('fetch(\'/api/v1/folders\',', {
+  fetch('/api/v1/folders', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,8 +17,12 @@ const createFolder = (e) => {
     body: JSON.stringify({
       folderName,
     }),
-  });
-  emptyFolderInput();
+  })
+    .then((response) => {
+      emptyFolderInput();
+      return response.json();
+    })
+    .catch(error => error);
 };
 
 
