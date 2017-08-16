@@ -16,12 +16,14 @@ app.locals.folders = {
 };
 app.locals.links = {
   0: {
+    dateAdded: 1502846798197,
     linkLabel: 'two label',
     linkLong: 'two long link',
     linkShort: 'two short link',
     folderID: '37b4e2d82900d5e94b8da524fbeb33c0',
   },
   1: {
+    dateAdded: 1502846807566,
     label: 'one label',
     longLink: 'one long link',
     shortLink: 'one short link',
@@ -67,10 +69,12 @@ app.post('/api/v1/links', (request, response) => {
     return response.status(422).send('Must include a label, link, and folder');
   }
 
+  const dateAdded = Date.now();
   const folderID = md5(folderName.toLowerCase());
   const linkShort = 'hi.im/a/short/link/kindof';
 
   app.locals.links[linkID] = {
+    dateAdded,
     linkLabel,
     linkLong,
     linkShort,
