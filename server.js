@@ -1,87 +1,98 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const md5 = require('md5');
 
 const app = express();
 
+// DATABASE CONFIGURATION
+app.locals.title = 'Jet Fuel';
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
 app.set('port', process.env.PORT || 3000);
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.locals.title = 'Jet Fuel';
-app.locals.folders = {
-  '37b4e2d82900d5e94b8da524fbeb33c0': 'Football',
-  fd2b28331d3d461e015195931007a76c: 'Pi Phi',
-  c5fd94950c06088e2163a923ba8c1535: 'Turing',
-};
-app.locals.links = {
-  0: {
-    dateAdded: 1502846798197,
-    linkLabel: 'two label',
-    linkLong: 'two long link',
-    linkShort: 'two short link',
-    folderID: '37b4e2d82900d5e94b8da524fbeb33c0',
-  },
-  1: {
-    dateAdded: 1502846807566,
-    label: 'one label',
-    longLink: 'one long link',
-    shortLink: 'one short link',
-    folderID: 'fd2b28331d3d461e015195931007a76c',
-  },
-};
-
-
+// ENDPOINTS
 // 'api/v1/folders'             with GET             view folders
 app.get('/api/v1/folders', (request, response) => {
-  response.status(200).json(app.locals.folders);
+  database('folders').select()
+    .then((folders) => {
+      response.status(200).json(folders);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 //                              with POST            create folder
 app.post('/api/v1/folders', (request, response) => {
-  const { folderName } = request.body;
-  const id = md5(folderName.toLowerCase());
+  const newFolder = request.body;
 
-  if (!folderName) { return response.status(422).send('Must include a folder name'); }
+  for (const requiredParameter of ['folderName']) {
+    if (!newFolder[requiredParameter]) {
+      return response.status(422).json({
+        error: `Missing required ${requiredParameter} parameter`,
+      });
+    }
+  }
 
-  app.locals.folders[id] = folderName;
+  database('folders').insert(newFolder, 'id')
+    .then((folder) => {
+      response.status(201).json({ id: folder[0] });
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
-  return response.status(201).json(app.locals.folders);
+// 'api/v1/links'               with GET             view all links
+app.get('/api/v1/links', (request, response) => {
+  database('links').select()
+    .then((links) => {
+      response.status(200).json(links);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+//                              with POST            create link in a folder
+app.post('/api/v1/links', (request, response) => {
+  const newLink = request.body;
+
+  for (const requiredParameter of ['linkLabel', 'linkLong', 'folder_id']) {
+    if (!newLink[requiredParameter]) {
+      return response.status(422).json({
+        error: `Missing required ${requiredParameter} parameter`,
+      });
+    }
+  }
+
+  const linkShort = 'hi.im/a/short/link/kindof';
+  newLink.linkShort = linkShort;
+
+  database('links').insert(newLink, 'id')
+    .then((link) => {
+      response.status(201).json({ id: link[0] });
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 
 // 'api/v1/folders/:id/links'   with GET             view links in a folder
-app.get('/api/v1/folders/:folderID/links', (request, response) => {
-  const { folderID } = request.params;
-  const links = Object.keys(app.locals.links)
-    .filter(linkID => app.locals.links[linkID].folderID === folderID)
-    .map(linkID => app.locals.links[linkID]);
-
-  response.status(200).json(links);
-});
-
-// '/api/v1/links'              with POST            create link in a folder
-app.post('/api/v1/links', (request, response) => {
-  const { linkLabel, linkLong, folderName } = request.body;
-  const linkID = md5(linkLong);
-
-  if (!linkLabel || !linkLong || !folderName) {
-    return response.status(422).send('Must include a label, link, and folder');
-  }
-
-  const dateAdded = Date.now();
-  const folderID = md5(folderName.toLowerCase());
-  const linkShort = 'hi.im/a/short/link/kindof';
-
-  app.locals.links[linkID] = {
-    dateAdded,
-    linkLabel,
-    linkLong,
-    linkShort,
-    folderID,
-  };
-
-  return response.status(201).json(app.locals.links[linkID]);
+app.get('/api/v1/folders/:folder_id/links', (request, response) => {
+  database('links').where('folder_id', request.params.folder_id).select()
+    .then((links) => {
+      response.status(200).json(links);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 
