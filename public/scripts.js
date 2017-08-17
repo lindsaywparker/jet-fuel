@@ -1,7 +1,13 @@
 
 // Functions
 const setupFolders = () => {
-
+  fetch('/api/v1/folders')
+    .then(response => response.json())
+    .then(folders => folders.map(folder =>
+      $('#folder-dropdown').prepend(`
+        <option value='${folder.folderID}'>${folder.folderName}</option>
+      `),
+    ));
 };
 
 const emptyFolderInput = () => {
