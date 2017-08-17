@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const md5 = require('md5');
+const shortHash = require('short-hash');
 
 const app = express();
 
@@ -72,7 +72,7 @@ app.post('/api/v1/links', (request, response) => {
     }
   }
 
-  newLink.linkShort = `jet.fuel/${md5(newLink.linkLong, true)}`;
+  newLink.linkShort = `jetfuel.com/${shortHash(newLink.linkLong)}`;
 
   database('links').insert(newLink, 'id')
     .then((link) => {
