@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const shortHash = require('short-hash');
 
 const app = express();
 
@@ -71,8 +72,7 @@ app.post('/api/v1/links', (request, response) => {
     }
   }
 
-  const linkShort = 'hi.im/a/short/link/kindof';
-  newLink.linkShort = linkShort;
+  newLink.linkShort = `jetfuel.com/${shortHash(newLink.linkLong)}`;
 
   database('links').insert(newLink, 'id')
     .then((link) => {
