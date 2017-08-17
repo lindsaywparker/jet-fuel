@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const shortHash = require('short-hash');
+const moment = require('moment');
 
 const app = express();
 
@@ -74,9 +75,11 @@ app.post('/api/v1/links', (request, response) => {
 
   newLink.linkShort = `jetfuel.com/${shortHash(newLink.linkLong)}`;
 
-  database('links').insert(newLink, 'id')
+  database('links').insert(newLink, '*')
     .then((link) => {
-      response.status(201).json({ id: link[0] });
+      link = link[0];
+      link.created_at = moment(link.created_at).format('lll');
+      response.status(201).json(link);
     })
     .catch((error) => {
       response.status(500).json({ error });
