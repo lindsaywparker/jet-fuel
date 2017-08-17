@@ -23,13 +23,11 @@
         </form>
         <form class='shorten-url-form' action='index.html' method='post'>
           <h3>Shorten & Save a Link</h3>
-          <input type='text' name='label' value='' placeholder='Label'>
-          <input type='text' name='long-url' value='' placeholder='Link'>
+          <input type='text' class='new-link-label' name='label' value='' placeholder='Label'>
+          <input type='text' class='new-link-long' name='long-url' value='' placeholder='Link'>
           <label for='folder-dropdown'>Folder:</label>
-          <select name='folder-dropdown' id='folder-dropdown'>
-            <option value='more-things'>more things</option> 
-          </select>
-          <button type='button' name='button'>Shorten & Save</button>
+          <select name='folder-dropdown' id='folder-dropdown'></select>
+          <button type='submit' name='button'>Shorten & Save</button>
         </form>
       </div>
       <h2 class='section-title'>VIEW</h2>

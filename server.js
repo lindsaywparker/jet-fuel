@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const md5 = require('md5');
 
 const app = express();
 
@@ -71,8 +72,7 @@ app.post('/api/v1/links', (request, response) => {
     }
   }
 
-  const linkShort = 'hi.im/a/short/link/kindof';
-  newLink.linkShort = linkShort;
+  newLink.linkShort = `jet.fuel/${md5(newLink.linkLong, true)}`;
 
   database('links').insert(newLink, 'id')
     .then((link) => {
