@@ -1,18 +1,31 @@
-
 // Functions
 const setupFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
     .then(folders => folders.map((folder) => {
       $('#folder-dropdown').prepend(`
-        <option value='${folder.folderID}'>${folder.folderName}</option>
+        <option value='${folder.id}'>${folder.folderName}</option>
       `);
       $('.folder-pane').prepend(`
         <p class='view-folder-name'>${folder.folderName}</p>
-        <table class='folder-links-${folder.folderID}'></table>
+        <table class='folder-links-${folder.id}'></table>
       `);
     },
     ));
+};
+
+const setupLinks = () => {
+  fetch('/api/v1/links')
+    .then(response => response.json())
+    .then(links => links.map((link) => {
+      $(`.folder-links-${link.folder_id}`).prepend(`
+        <tr>
+          <td class='view-link-title'>${link.linkLabel}</td>
+          <td class='view-link-shortUrl'><a href='${link.linkShort}'>${link.linkShort}</a></td>
+          <td class='view-link-date'>${link.created_at}</td>
+        </tr>
+      `);
+    }));
 };
 
 const emptyFolderInput = () => {
@@ -39,7 +52,7 @@ const updateLinkDOM = (link) => {
   $(`.folder-links-${link.folder_id}`).prepend(`
     <tr>
       <td class='view-link-title'>${link.linkLabel}</td>
-      <td class='view-link-shortUrl'>${link.linkShort}</td>
+      <td class='view-link-shortUrl'><a href='${link.linkShort}'>${link.linkShort}</a></td>
       <td class='view-link-date'>${link.created_at}</td>
     </tr>
   `);
@@ -92,7 +105,7 @@ const createLink = () => {
 
 // Setup
 setupFolders();
-
+setupLinks();
 
 // Event Listeners
 $('.create-folder-form').on('submit', (e) => {
