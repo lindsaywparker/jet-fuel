@@ -71,6 +71,10 @@ const createFolder = () => {
   })
     .then(response => response.json())
     .then((folder) => {
+      if (folder.error) {
+        $('.new-folder-input').focus();
+        throw new Error('This folder already exists.');
+      }
       $('.new-link-label').focus();
       emptyFolderInput();
       updateFolderDOM(folderName, folder.id);
@@ -97,6 +101,9 @@ const createLink = () => {
     .then(response => response.json())
     .then((link) => {
       $('.new-link-label').focus();
+      if (link.error) {
+        throw new Error('This link already exists.');
+      }
       emptyLinkInput();
       updateLinkDOM(link);
     })
