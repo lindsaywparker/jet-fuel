@@ -1,7 +1,20 @@
-// Setup
-
 
 // Functions
+const setupFolders = () => {
+  fetch('/api/v1/folders')
+    .then(response => response.json())
+    .then(folders => folders.map((folder) => {
+      $('#folder-dropdown').prepend(`
+        <option value='${folder.folderID}'>${folder.folderName}</option>
+      `);
+      $('.folder-pane').prepend(`
+        <p class='view-folder-name'>${folder.folderName}</p>
+        <table class='folder-links-${folder.folderID}'></table>
+      `);
+    },
+    ));
+};
+
 const emptyFolderInput = () => {
   $('.new-folder-input').val('');
 };
@@ -11,9 +24,24 @@ const emptyLinkInput = () => {
   $('.new-link-long').val('');
 };
 
-const updateFolderDropdown = (folderName, folderID) => {
+const updateFolderDOM = (folderName, folderID) => {
   $('#folder-dropdown').prepend(`
-      <option value='${folderID}'>${folderName}</option> 
+    <option value='${folderID}'>${folderName}</option> 
+  `);
+
+  $('.folder-pane').prepend(`
+    <p class='view-folder-name'>${folderName}</p>
+    <table class='folder-links-${folderID}'></table>
+  `);
+};
+
+const updateLinkDOM = (link) => {
+  $(`.folder-links-${link.folder_id}`).prepend(`
+    <tr>
+      <td class='view-link-title'>${link.linkLabel}</td>
+      <td class='view-link-shortUrl'>${link.linkShort}</td>
+      <td class='view-link-date'>${link.created_at}</td>
+    </tr>
   `);
 };
 
@@ -30,8 +58,9 @@ const createFolder = () => {
   })
     .then(response => response.json())
     .then((folder) => {
+      $('.new-link-label').focus();
       emptyFolderInput();
-      updateFolderDropdown(folderName, folder.id);
+      updateFolderDOM(folderName, folder.id);
     })
     .catch(error => console.log(error));
 };
@@ -56,9 +85,13 @@ const createLink = () => {
     .then((link) => {
       $('.new-link-label').focus();
       emptyLinkInput();
+      updateLinkDOM(link);
     })
     .catch(error => console.log(error));
 };
+
+// Setup
+setupFolders();
 
 
 // Event Listeners
