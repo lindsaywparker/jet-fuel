@@ -13,8 +13,8 @@ exports.up = function (knex, Promise) {
       table.string('linkLabel');
       table.string('linkLong').unique();
       table.string('linkShort');
-      table.integer('folder_id').unsigned();
-      table.foreign('folder_id').references('folders.id');
+      table.integer('folderID').unsigned();
+      table.foreign('folderID').references('folders.id');
 
       table.timestamps(true, true);
     }),

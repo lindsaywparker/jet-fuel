@@ -65,7 +65,7 @@ app.get('/api/v1/links', (request, response) => {
 app.post('/api/v1/links', (request, response) => {
   const newLink = request.body;
 
-  for (const requiredParameter of ['linkLabel', 'linkLong', 'folder_id']) {
+  for (const requiredParameter of ['linkLabel', 'linkLong', 'folderID']) {
     if (!newLink[requiredParameter]) {
       return response.status(422).json({
         error: `Missing required ${requiredParameter} parameter`,
@@ -85,9 +85,19 @@ app.post('/api/v1/links', (request, response) => {
 });
 
 
+app.get('/api/v1/links/:linkID', (request, response) => {
+  database('links').where('id', request.params.linkID).select()
+    .then((link) => {
+      response.status(200).json(link[0].linkLong);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
 // 'api/v1/folders/:id/links'   with GET             view links in a folder
-app.get('/api/v1/folders/:folder_id/links', (request, response) => {
-  database('links').where('folder_id', request.params.folder_id).select()
+app.get('/api/v1/folders/:folderID/links', (request, response) => {
+  database('links').where('folderID', request.params.folderID).select()
     .then((links) => {
       response.status(200).json(links);
     })
