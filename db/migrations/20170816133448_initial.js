@@ -3,7 +3,7 @@ exports.up = function (knex, Promise) {
   return Promise.all([
     knex.schema.createTable('folders', function (table) {
       table.increments('id').primary();
-      table.string('folderName');
+      table.string('folderName').unique();
 
       table.timestamps(true, true);
     }),
@@ -11,7 +11,7 @@ exports.up = function (knex, Promise) {
     knex.schema.createTable('links', function (table) {
       table.increments('id').primary();
       table.string('linkLabel');
-      table.string('linkLong');
+      table.string('linkLong').unique();
       table.string('linkShort');
       table.integer('folder_id').unsigned();
       table.foreign('folder_id').references('folders.id');
