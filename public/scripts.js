@@ -7,7 +7,7 @@ const setupFolders = () => {
         <option value='${folder.id}'>${folder.folderName}</option>
       `);
       $('.folder-pane').prepend(`
-        <p class='view-folder-name'>${folder.folderName}</p>
+        <p class='view-folder-name' onclick='toggleFolderView()'>${folder.folderName}</p>
         <table class='folder-links-${folder.id}'></table>
       `);
     },
@@ -18,10 +18,10 @@ const setupLinks = () => {
   fetch('/api/v1/links')
     .then(response => response.json())
     .then(links => links.map((link) => {
-      $(`.folder-links-${link.folder_id}`).prepend(`
+      $(`.folder-links-${link.folderID}`).prepend(`
         <tr>
           <td class='view-link-title'>${link.linkLabel}</td>
-          <td class='view-link-shortUrl'><a href='${link.linkShort}'>${link.linkShort}</a></td>
+          <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
           <td class='view-link-date'>${link.created_at}</td>
         </tr>
       `);
@@ -43,16 +43,16 @@ const updateFolderDOM = (folderName, folderID) => {
   `);
 
   $('.folder-pane').prepend(`
-    <p class='view-folder-name'>${folderName}</p>
+    <p class='view-folder-name' onclick='toggleFolderView()'>${folderName}</p>
     <table class='folder-links-${folderID}'></table>
   `);
 };
 
 const updateLinkDOM = (link) => {
-  $(`.folder-links-${link.folder_id}`).prepend(`
+  $(`.folder-links-${link.folderID}`).prepend(`
     <tr>
       <td class='view-link-title'>${link.linkLabel}</td>
-      <td class='view-link-shortUrl'><a href='${link.linkShort}'>${link.linkShort}</a></td>
+      <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
       <td class='view-link-date'>${link.created_at}</td>
     </tr>
   `);
@@ -84,8 +84,10 @@ const createFolder = () => {
 
 const createLink = () => {
   const linkLabel = $('.new-link-label').val();
-  const linkLong = $('.new-link-long').val();
-  const folder_id = $('#folder-dropdown').val();
+  const folderID = $('#folder-dropdown').val();
+  let linkLong = $('.new-link-long').val();
+
+  if (!linkLong.startsWith('http')) linkLong = `http://${linkLong}`;
 
   fetch('/api/v1/links', {
     method: 'POST',
@@ -95,7 +97,7 @@ const createLink = () => {
     body: JSON.stringify({
       linkLabel,
       linkLong,
-      folder_id,
+      folderID,
     }),
   })
     .then(response => response.json())
@@ -108,6 +110,16 @@ const createLink = () => {
       updateLinkDOM(link);
     })
     .catch(error => console.log(error));
+};
+
+const toggleFolderView = () => {
+  console.log('hi, I should toggle folder view');
+};
+
+const redirect = (linkID) => {
+  fetch(`/api/v1/links/${linkID}`)
+    .then(response => response.json())
+    .then(link => window.open(link));
 };
 
 // Setup

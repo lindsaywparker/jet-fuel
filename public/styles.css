@@ -102,6 +102,15 @@ button:hover {
   margin: auto;
 }
 
+.view-folder-name {
+  cursor: pointer;
+}
+
+.view-link-shortUrl {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 table {
   width: 100%;
   padding-left: 12px;
