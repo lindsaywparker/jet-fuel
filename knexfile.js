@@ -10,4 +10,20 @@ module.exports = {
       directory: './db/migrations',
     },
   },
+
+  test: {
+    client: 'pg',
+    migrations: {
+      directory: './test/migrations',
+    },
+  },
+
+  production: {
+    client: 'pg',
+    connection: `${process.env.DATABASE_URL}?ssl=true`,
+    useNullAsDefault: true,
+    migrations: {
+      directory: './db/migrations',
+    },
+  },
 };
