@@ -3,10 +3,15 @@
 const setupFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
-    .then(folders => folders.map(folder =>
+    .then(folders => folders.map((folder) => {
       $('#folder-dropdown').prepend(`
         <option value='${folder.folderID}'>${folder.folderName}</option>
-      `),
+      `);
+      $('.folder-pane').prepend(`
+        <p class='view-folder-name'>${folder.folderName}</p>
+        <table class='folder-links-${folder.folderID}'></table>
+      `);
+    },
     ));
 };
 
