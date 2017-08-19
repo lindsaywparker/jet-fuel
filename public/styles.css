@@ -24,6 +24,10 @@ header {
   align-items: center;
 }
 
+h4, p {
+  margin: 0;
+}
+
 .page-title {
   width: 269px;
   padding-left: 75px;
@@ -97,26 +101,75 @@ button:hover {
   box-shadow: 0 0 3pt 1pt #63F4CF;
 }
 
+.folder-status-msg, .link-status-msg {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+}
+
 .folder-pane {
   width: 704px;
   margin: auto;
 }
 
-.view-folder-name {
+.folder-header-with-sort {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: #D6DAE1;
+  color: #000;
   cursor: pointer;
 }
 
+.hidden {
+  display: block;
+  overflow: hidden;
+  height: 0;
+  width: 0;
+}
+
+.sort-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 150px;
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.sorting-direction {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.view-folder-name {
+  text-align: left;
+}
+
 .view-link-shortUrl {
+  width: 250px;
   cursor: pointer;
   text-decoration: underline;
 }
 
+.view-link-date{
+  width: 90px;
+}
+
 table {
+  min-width: 400px;
   width: 100%;
   padding-left: 12px;
   border-radius: 15px;
+  table-layout: fixed;
+  transition: all 0.65s ease;
 }
 
 td {
   padding: 5px;
+  overflow: hidden;
+  white-space: nowrap;
 }

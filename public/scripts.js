@@ -1,4 +1,10 @@
 // Functions
+const formatDate = (date) => {
+  const [year, month, day] = date.slice(0, 10).split('-');
+  const newDate = `${month}-${day}-${year}`;
+  return newDate;
+};
+
 const setupFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
@@ -7,34 +13,65 @@ const setupFolders = () => {
         <option value='${folder.id}'>${folder.folderName}</option>
       `);
       $('.folder-pane').prepend(`
-        <p class='view-folder-name' onclick='toggleFolderView()'>${folder.folderName}</p>
-        <table class='folder-links-${folder.id}'></table>
+        <div class='folder-header-with-sort'>
+          <h4 class='view-folder-name'>${folder.folderName}</h4>
+          <div class='sort-controls'>
+            <p class='sorting-title hidden'>Sort by:</p>
+            <p class='sorting-direction hidden' onclick='setupLinks("newest")'>newest</p>
+            <p class='sorting-direction hidden' onclick='setupLinks("oldest")'>oldest</p>
+          </div>
+        </div>
+        <table class='folder-links-${folder.id} hidden'></table>
       `);
     },
     ));
 };
 
-const setupLinks = () => {
+const setupLinks = (order) => {
   fetch('/api/v1/links')
     .then(response => response.json())
-    .then(links => links.map((link) => {
-      $(`.folder-links-${link.folderID}`).prepend(`
-        <tr>
-          <td class='view-link-title'>${link.linkLabel}</td>
-          <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
-          <td class='view-link-date'>${link.created_at}</td>
-        </tr>
-      `);
-    }));
+    .then((links) => {
+      const sortedLinks = links.sort((a, b) => {
+        if (order === 'newest') {
+          return b.id - a.id;
+        }
+        return a.id - b.id;
+      });
+
+      $('table').text('');
+      sortedLinks.map((link) => {
+        $(`.folder-links-${link.folderID}`).prepend(`
+          <tr>
+            <td class='view-link-title'>${link.linkLabel}</td>
+            <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
+            <td class='view-link-date'>${formatDate(link.created_at)}</td>
+          </tr>
+        `);
+      });
+    });
 };
 
-const emptyFolderInput = () => {
+const validURL = (url) => {
+  const space = url.includes(' ');
+  const backslash = url.includes('\\');
+  const dot = url.includes('.');
+
+  return (!space && !backslash && dot);
+};
+
+const displayStatusMsg = (message, location) => {
+  $(`.${location}-status-msg`).text(message);
+};
+
+const emptyFolderForm = () => {
   $('.new-folder-input').val('');
+  $('.folder-status-msg').text('');
 };
 
-const emptyLinkInput = () => {
+const emptyLinkForm = () => {
   $('.new-link-label').val('');
   $('.new-link-long').val('');
+  $('.link-status-msg').text('');
 };
 
 const updateFolderDOM = (folderName, folderID) => {
@@ -43,8 +80,15 @@ const updateFolderDOM = (folderName, folderID) => {
   `);
 
   $('.folder-pane').prepend(`
-    <p class='view-folder-name' onclick='toggleFolderView()'>${folderName}</p>
-    <table class='folder-links-${folderID}'></table>
+    <div class='folder-header-with-sort'>
+      <h4 class='view-folder-name'>${folderName}</h4>
+      <div class='sort-controls'>
+        <p class='sorting-title hidden'>Sort by:</p>
+        <p class='sorting-direction hidden' onclick='setupLinks("newest")'>newest</p>
+        <p class='sorting-direction hidden' onclick='setupLinks("oldest")'>oldest</p>
+      </div>
+    </div>
+    <table class='folder-links-${folderID} hidden'></table>
   `);
 };
 
@@ -53,9 +97,13 @@ const updateLinkDOM = (link) => {
     <tr>
       <td class='view-link-title'>${link.linkLabel}</td>
       <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
-      <td class='view-link-date'>${link.created_at}</td>
+      <td class='view-link-date'>${formatDate(link.created_at)}</td>
     </tr>
   `);
+
+  // if ($(`.folder-links-${link.folderID}`).hasClass('hidden')) {
+  //   $('.folder-pane').trigger('click');
+  // }
 };
 
 const createFolder = () => {
@@ -73,13 +121,14 @@ const createFolder = () => {
     .then((folder) => {
       if (folder.error) {
         $('.new-folder-input').focus();
-        throw new Error('This folder already exists.');
+        throw new Error('Folder already exists');
       }
       $('.new-link-label').focus();
-      emptyFolderInput();
+      emptyFolderForm();
+      displayStatusMsg(`'${folderName}' created successfully`, 'folder');
       updateFolderDOM(folderName, folder.id);
     })
-    .catch(error => console.log(error));
+    .catch(error => displayStatusMsg(error, 'folder'));
 };
 
 const createLink = () => {
@@ -87,33 +136,35 @@ const createLink = () => {
   const folderID = $('#folder-dropdown').val();
   let linkLong = $('.new-link-long').val();
 
-  if (!linkLong.startsWith('http')) linkLong = `http://${linkLong}`;
+  if (validURL(linkLong)) {
+    if (!linkLong.startsWith('http')) linkLong = `http://${linkLong}`;
 
-  fetch('/api/v1/links', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      linkLabel,
-      linkLong,
-      folderID,
-    }),
-  })
-    .then(response => response.json())
-    .then((link) => {
-      $('.new-link-label').focus();
-      if (link.error) {
-        throw new Error('This link already exists.');
-      }
-      emptyLinkInput();
-      updateLinkDOM(link);
+    fetch('/api/v1/links', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        linkLabel,
+        linkLong,
+        folderID,
+      }),
     })
-    .catch(error => console.log(error));
-};
-
-const toggleFolderView = () => {
-  console.log('hi, I should toggle folder view');
+      .then(response => response.json())
+      .then((link) => {
+        $('.new-link-label').focus();
+        if (link.error) {
+          throw new Error('Link already exists');
+        }
+        emptyLinkForm();
+        displayStatusMsg(`'${linkLabel}' saved successfully`, 'link');
+        updateLinkDOM(link);
+      })
+      .catch(error => displayStatusMsg(error, 'link'));
+  } else {
+    displayStatusMsg('Not a valid URL', 'link');
+    $('.new-link-long').focus();
+  }
 };
 
 const redirect = (linkID) => {
@@ -124,7 +175,7 @@ const redirect = (linkID) => {
 
 // Setup
 setupFolders();
-setupLinks();
+setupLinks('newest');
 
 // Event Listeners
 $('.create-folder-form').on('submit', (e) => {
@@ -137,3 +188,8 @@ $('.shorten-url-form').on('submit', (e) => {
   createLink();
 });
 
+$('.folder-pane').on('click', '.folder-header-with-sort', (e) => {
+  const folder = e.target;
+  $(folder).find('p').toggleClass('hidden');
+  $(folder).next('table').toggleClass('hidden');
+});

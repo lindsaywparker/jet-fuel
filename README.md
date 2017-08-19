@@ -1,8 +1,12 @@
 ## Jet Fuel - A Turing Mod 4 FEE Project
 
 ### Synopsis
-<!-- This project contains a card-based interface displaying architectural and interior design images across twelve fundamental design styles and six design categories.  These images are scraped from the [Houzz website](houzz.com/photos) using the [Cheerio module](https://github.com/cheeriojs/cheerio).  The project provides functionality to select and display the user's favorite images, as well as a calculation of the user's style preferences. -->
+This project converts user-provided long URLs and converts them to short URLs while saving them to a selected folder.  It is built on the front-end with jQuery and the back-end with Node/Express, knex, and PostgreSQL.
 
+Design inspiration came from [@ToshTak](https://dribbble.com/ToshTak) on [Dribble](https://dribbble.com/shots/2040722-Engage-Prague-2015/attachments/362802).
+
+### See It Live
+[Jet Fuel](https://lwp-jetfuel.herokuapp.com) on Heroku
 
 ### Set Up
 
@@ -13,9 +17,9 @@ Run `npm install` from the root directory
 Run `npm start` and visit localhost:3000 in your browser
 
 ### Test Driven Development
-<!-- Back Home uses Jest with Enzyme for testing
+Jet Fuel uses Mocha and Chai for testing
 
-Run with `npm test` -->
+Run with `npm test`
 
 ### Original Assignment
 
