@@ -80,8 +80,15 @@ const updateFolderDOM = (folderName, folderID) => {
   `);
 
   $('.folder-pane').prepend(`
-    <p class='view-folder-name'>${folderName}</p>
-    <table class='folder-links-${folderID}'></table>
+    <div class='folder-header-with-sort'>
+      <h4 class='view-folder-name'>${folderName}</h4>
+      <div class='sort-controls'>
+        <p class='sorting-title hidden'>Sort by:</p>
+        <p class='sorting-direction hidden' onclick='setupLinks("newest")'>newest</p>
+        <p class='sorting-direction hidden' onclick='setupLinks("oldest")'>oldest</p>
+      </div>
+    </div>
+    <table class='folder-links-${folderID} hidden'></table>
   `);
 };
 
@@ -90,9 +97,13 @@ const updateLinkDOM = (link) => {
     <tr>
       <td class='view-link-title'>${link.linkLabel}</td>
       <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
-      <td class='view-link-date'>${link.created_at}</td>
+      <td class='view-link-date'>${formatDate(link.created_at)}</td>
     </tr>
   `);
+
+  // if ($(`.folder-links-${link.folderID}`).hasClass('hidden')) {
+  //   $('.folder-pane').trigger('click');
+  // }
 };
 
 const createFolder = () => {
@@ -154,10 +165,6 @@ const createLink = () => {
     displayStatusMsg('Not a valid URL', 'link');
     $('.new-link-long').focus();
   }
-};
-
-const toggleFolderView = (e) => {
-  console.log('hi, I should toggle folder view', e);
 };
 
 const redirect = (linkID) => {
