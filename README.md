@@ -1,7 +1,7 @@
 ## Jet Fuel - A Turing Mod 4 FEE Project
 
 ### Synopsis
-This project converts user-inputted long URLs and converts them to short URLs while saving them to a selected folder.  It is built on the front-end with jQuery and the back-end with Node/Express, knex, and PostgreSQL.
+This project converts user-provided long URLs and converts them to short URLs while saving them to a selected folder.  It is built on the front-end with jQuery and the back-end with Node/Express, knex, and PostgreSQL.
 
 Design inspiration came from [@ToshTak](https://dribbble.com/ToshTak) on [Dribble](https://dribbble.com/shots/2040722-Engage-Prague-2015/attachments/362802).
 
