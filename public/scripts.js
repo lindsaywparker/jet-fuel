@@ -1,4 +1,10 @@
 // Functions
+const formatDate = (date) => {
+  const [year, month, day] = date.slice(0, 10).split('-');
+  const newDate = `${month}-${day}-${year}`;
+  return newDate;
+};
+
 const setupFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
@@ -7,25 +13,42 @@ const setupFolders = () => {
         <option value='${folder.id}'>${folder.folderName}</option>
       `);
       $('.folder-pane').prepend(`
-        <p class='view-folder-name' onclick='toggleFolderView()'>${folder.folderName}</p>
+        <div class='folder-header-with-sort'>
+          <p class='view-folder-name' onclick='toggleFolderView()'>${folder.folderName}</p>
+          <div class='sort-controls'>
+            <p class='sorting-title'>Sort by:</p>
+            <p class='sorting-direction' onclick='setupLinks("newest")'>newest</p>
+            <p class='sorting-direction' onclick='setupLinks("oldest")'>oldest</p>
+          </div>
+        </div>
         <table class='folder-links-${folder.id}'></table>
       `);
     },
     ));
 };
 
-const setupLinks = () => {
+const setupLinks = (order) => {
   fetch('/api/v1/links')
     .then(response => response.json())
-    .then(links => links.map((link) => {
-      $(`.folder-links-${link.folderID}`).prepend(`
-        <tr>
-          <td class='view-link-title'>${link.linkLabel}</td>
-          <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
-          <td class='view-link-date'>${link.created_at}</td>
-        </tr>
-      `);
-    }));
+    .then((links) => {
+      const sortedLinks = links.sort((a, b) => {
+        if (order === 'newest') {
+          return b.id - a.id;
+        }
+        return a.id - b.id;
+      });
+
+      $('table').text('');
+      sortedLinks.map((link) => {
+        $(`.folder-links-${link.folderID}`).prepend(`
+          <tr>
+            <td class='view-link-title'>${link.linkLabel}</td>
+            <td class='view-link-shortUrl' onclick='redirect(${link.id})'>${link.linkShort}</td>
+            <td class='view-link-date'>${formatDate(link.created_at)}</td>
+          </tr>
+        `);
+      });
+    });
 };
 
 const validURL = (url) => {
@@ -145,7 +168,7 @@ const redirect = (linkID) => {
 
 // Setup
 setupFolders();
-setupLinks();
+setupLinks('newest');
 
 // Event Listeners
 $('.create-folder-form').on('submit', (e) => {
