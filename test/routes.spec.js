@@ -3,76 +3,98 @@ const chaiHttp = require('chai-http');
 
 const should = chai.should();
 const server = require('../server');
-// const seed = require('./seed');
+const config = require('../knexfile.js').test;
+const knex = require('knex')(config);
+
 
 chai.use(chaiHttp);
 
 describe('Client Routes', () => {
-  it('should return the homepage', () => {
-    true.should.equal(true);
+  it('should return the homepage', (done) => {
+    chai.request(server)
+      .get('/')
+      .end((error, response) => {
+        response.should.have.status(200);
+        response.should.be.html;
+        response.res.text.should.include('JET FUEL');
+        response.res.text.should.include('URL Shortener');
+        response.res.text.should.include('new-folder-input');
+        response.res.text.should.include('new-link-label');
+        response.res.text.should.include('new-link-long');
+        response.res.text.should.include('folder-dropdown');
+        done();
+      });
   });
 });
 
 describe('API Routes', () => {
-  before((done) => {
-    // run migrations
-    done();
+  before(() => {
+    knex.migrate.latest()
+      .then(done => done());
   });
 
-  beforeEach((done) => {
+  beforeEach(() => {
     // run seed file(s)
+    knex.seed.run()
+      .then(done => done());
     // folders = seed.folders;
     // links = seed.links;
-    done();
   });
 
   describe('GET /api/v1/folders', () => {
     it('should return all folders', (done) => {
-      true.should.equal(true);
-      done();
+      chai.request(server)
+        .get('/api/v1/folders')
+        .end((error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          // response.body.length.should.equal(3);
+          done();
+        });
     });
   });
 
   describe('POST /api/v1/folders', () => {
-    it('should create a new folder', (done) => {
+    it.skip('should create a new folder', (done) => {
       true.should.equal(true);
       done();
     });
 
-    it('should not create a new folder with missing data', (done) => {
+    it.skip('should not create a new folder with missing data', (done) => {
       true.should.equal(true);
       done();
     });
   });
 
   describe('GET /api/v1/links', () => {
-    it('should return all links', (done) => {
+    it.skip('should return all links', (done) => {
       true.should.equal(true);
       done();
     });
   });
 
   describe('POST /api/v1/links', () => {
-    it('should create a new link', (done) => {
+    it.skip('should create a new link', (done) => {
       true.should.equal(true);
       done();
     });
 
-    it('should not create a new link with missing data', (done) => {
+    it.skip('should not create a new link with missing data', (done) => {
       true.should.equal(true);
       done();
     });
   });
 
   describe('GET /api/v1/links/:linkID', () => {
-    it('should return a long link', (done) => {
+    it.skip('should return a long link', (done) => {
       true.should.equal(true);
       done();
     });
   });
 
   describe('GET /api/v1/folders/:folderID/links', () => {
-    it('should return all links in a folder', (done) => {
+    it.skip('should return all links in a folder', (done) => {
       true.should.equal(true);
       done();
     });
