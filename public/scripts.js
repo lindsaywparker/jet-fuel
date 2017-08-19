@@ -28,6 +28,18 @@ const setupLinks = () => {
     }));
 };
 
+const validURL = (url) => {
+  const space = url.includes(' ');
+  const backslash = url.includes('\\');
+  const dot = url.includes('.');
+
+  return (!space && !backslash && dot);
+};
+
+const displayErrorMsg = (message, location) => {
+  $(`.${location}-error-msg`).text(message);
+};
+
 const emptyFolderInput = () => {
   $('.new-folder-input').val('');
 };
@@ -87,29 +99,34 @@ const createLink = () => {
   const folderID = $('#folder-dropdown').val();
   let linkLong = $('.new-link-long').val();
 
-  if (!linkLong.startsWith('http')) linkLong = `http://${linkLong}`;
+  if (validURL(linkLong)) {
+    if (!linkLong.startsWith('http')) linkLong = `http://${linkLong}`;
 
-  fetch('/api/v1/links', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      linkLabel,
-      linkLong,
-      folderID,
-    }),
-  })
-    .then(response => response.json())
-    .then((link) => {
-      $('.new-link-label').focus();
-      if (link.error) {
-        throw new Error('This link already exists.');
-      }
-      emptyLinkInput();
-      updateLinkDOM(link);
+    fetch('/api/v1/links', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        linkLabel,
+        linkLong,
+        folderID,
+      }),
     })
-    .catch(error => console.log(error));
+      .then(response => response.json())
+      .then((link) => {
+        $('.new-link-label').focus();
+        if (link.error) {
+          throw new Error('This link already exists.');
+        }
+        emptyLinkInput();
+        updateLinkDOM(link);
+      })
+      .catch(error => console.log(error));
+  } else {
+    displayErrorMsg('Not a valid URL', 'link');
+    $('.new-link-long').focus();
+  }
 };
 
 const toggleFolderView = () => {
