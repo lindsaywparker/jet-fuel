@@ -36,17 +36,19 @@ const validURL = (url) => {
   return (!space && !backslash && dot);
 };
 
-const displayErrorMsg = (message, location) => {
-  $(`.${location}-error-msg`).text(message);
+const displayStatusMsg = (message, location) => {
+  $(`.${location}-status-msg`).text(message);
 };
 
-const emptyFolderInput = () => {
+const emptyFolderForm = () => {
   $('.new-folder-input').val('');
+  $('.folder-status-msg').text('');
 };
 
-const emptyLinkInput = () => {
+const emptyLinkForm = () => {
   $('.new-link-label').val('');
   $('.new-link-long').val('');
+  $('.link-status-msg').text('');
 };
 
 const updateFolderDOM = (folderName, folderID) => {
@@ -85,13 +87,14 @@ const createFolder = () => {
     .then((folder) => {
       if (folder.error) {
         $('.new-folder-input').focus();
-        throw new Error('This folder already exists.');
+        throw new Error('Folder already exists');
       }
       $('.new-link-label').focus();
-      emptyFolderInput();
+      emptyFolderForm();
+      displayStatusMsg(`'${folderName}' created successfully`, 'folder');
       updateFolderDOM(folderName, folder.id);
     })
-    .catch(error => console.log(error));
+    .catch(error => displayStatusMsg(error, 'folder'));
 };
 
 const createLink = () => {
@@ -117,14 +120,15 @@ const createLink = () => {
       .then((link) => {
         $('.new-link-label').focus();
         if (link.error) {
-          throw new Error('This link already exists.');
+          throw new Error('Link already exists');
         }
-        emptyLinkInput();
+        emptyLinkForm();
+        displayStatusMsg(`'${linkLabel}' saved successfully`, 'link');
         updateLinkDOM(link);
       })
-      .catch(error => console.log(error));
+      .catch(error => displayStatusMsg(error, 'link'));
   } else {
-    displayErrorMsg('Not a valid URL', 'link');
+    displayStatusMsg('Not a valid URL', 'link');
     $('.new-link-long').focus();
   }
 };
