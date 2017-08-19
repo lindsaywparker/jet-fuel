@@ -25,6 +25,10 @@ describe('Client Routes', () => {
         done();
       });
   });
+
+  // it('should a 404 for routes that don\'t exist', (done) => {
+  //   
+  // });
 });
 
 describe('API Routes', () => {
@@ -34,11 +38,14 @@ describe('API Routes', () => {
   });
 
   beforeEach(() => {
-    // run seed file(s)
-    knex.seed.run()
-      .then(done => done());
-    // folders = seed.folders;
-    // links = seed.links;
+    knex.migrate.rollback()
+      .then(() => {
+        knex.migrate.latest()
+          .then(() => {
+            return knex.seed.run()
+              .then(done => done());
+          });
+      });
   });
 
   describe('GET /api/v1/folders', () => {
@@ -49,7 +56,7 @@ describe('API Routes', () => {
           response.should.have.status(200);
           response.should.be.json;
           response.body.should.be.a('array');
-          // response.body.length.should.equal(3);
+          response.body.length.should.equal(1);
           done();
         });
     });
