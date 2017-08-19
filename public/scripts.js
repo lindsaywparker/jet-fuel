@@ -14,14 +14,14 @@ const setupFolders = () => {
       `);
       $('.folder-pane').prepend(`
         <div class='folder-header-with-sort'>
-          <p class='view-folder-name' onclick='toggleFolderView()'>${folder.folderName}</p>
+          <h4 class='view-folder-name'>${folder.folderName}</h4>
           <div class='sort-controls'>
-            <p class='sorting-title'>Sort by:</p>
-            <p class='sorting-direction' onclick='setupLinks("newest")'>newest</p>
-            <p class='sorting-direction' onclick='setupLinks("oldest")'>oldest</p>
+            <p class='sorting-title hidden'>Sort by:</p>
+            <p class='sorting-direction hidden' onclick='setupLinks("newest")'>newest</p>
+            <p class='sorting-direction hidden' onclick='setupLinks("oldest")'>oldest</p>
           </div>
         </div>
-        <table class='folder-links-${folder.id}'></table>
+        <table class='folder-links-${folder.id} hidden'></table>
       `);
     },
     ));
@@ -80,7 +80,7 @@ const updateFolderDOM = (folderName, folderID) => {
   `);
 
   $('.folder-pane').prepend(`
-    <p class='view-folder-name' onclick='toggleFolderView()'>${folderName}</p>
+    <p class='view-folder-name'>${folderName}</p>
     <table class='folder-links-${folderID}'></table>
   `);
 };
@@ -156,8 +156,8 @@ const createLink = () => {
   }
 };
 
-const toggleFolderView = () => {
-  console.log('hi, I should toggle folder view');
+const toggleFolderView = (e) => {
+  console.log('hi, I should toggle folder view', e);
 };
 
 const redirect = (linkID) => {
@@ -181,3 +181,8 @@ $('.shorten-url-form').on('submit', (e) => {
   createLink();
 });
 
+$('.folder-pane').on('click', '.folder-header-with-sort', (e) => {
+  const folder = e.target;
+  $(folder).find('p').toggleClass('hidden');
+  $(folder).next('table').toggleClass('hidden');
+});

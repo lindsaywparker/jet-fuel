@@ -24,7 +24,7 @@ header {
   align-items: center;
 }
 
-p {
+h4, p {
   margin: 0;
 }
 
@@ -116,39 +116,60 @@ button:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: #D6DAE1;
+  color: #000;
+  cursor: pointer;
+}
+
+.hidden {
+  display: block;
+  overflow: hidden;
+  height: 0;
+  width: 0;
 }
 
 .sort-controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 140px;
+  justify-content: flex-end;
+  width: 150px;
   margin: 0;
   font-size: 14px;
   font-style: italic;
 }
 
 .sorting-direction {
+  margin-left: 5px;
   cursor: pointer;
 }
 
 .view-folder-name {
-  cursor: pointer;
   text-align: left;
 }
 
 .view-link-shortUrl {
+  width: 250px;
   cursor: pointer;
   text-decoration: underline;
 }
 
+.view-link-date{
+  width: 90px;
+}
+
 table {
+  min-width: 400px;
   width: 100%;
   padding-left: 12px;
   border-radius: 15px;
+  table-layout: fixed;
+  transition: all 0.65s ease;
 }
 
 td {
   padding: 5px;
+  overflow: hidden;
+  white-space: nowrap;
 }
