@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ENDPOINTS
+// 'api/v1/folders'             with GET             view folders
 app.get('/api/v1/folders', (request, response) => {
   database('folders').select()
     .then((folders) => {
@@ -27,6 +28,7 @@ app.get('/api/v1/folders', (request, response) => {
     });
 });
 
+//                              with POST            create folder
 app.post('/api/v1/folders', (request, response) => {
   const newFolder = request.body;
 
@@ -47,6 +49,7 @@ app.post('/api/v1/folders', (request, response) => {
     });
 });
 
+// 'api/v1/links'               with GET             view all links
 app.get('/api/v1/links', (request, response) => {
   database('links').select()
     .then((links) => {
@@ -57,6 +60,7 @@ app.get('/api/v1/links', (request, response) => {
     });
 });
 
+//                              with POST            create link in a folder
 app.post('/api/v1/links', (request, response) => {
   const newLink = request.body;
 
@@ -79,6 +83,7 @@ app.post('/api/v1/links', (request, response) => {
     });
 });
 
+
 app.get('/api/v1/links/:linkID', (request, response) => {
   database('links').where('id', request.params.linkID).select()
     .then((link) => {
@@ -89,6 +94,7 @@ app.get('/api/v1/links/:linkID', (request, response) => {
     });
 });
 
+// 'api/v1/folders/:id/links'   with GET             view links in a folder
 app.get('/api/v1/folders/:folderID/links', (request, response) => {
   database('links').where('folderID', request.params.folderID).select()
     .then((links) => {
@@ -98,6 +104,7 @@ app.get('/api/v1/folders/:folderID/links', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
 
 app.listen(app.get('port'), () => {
   console.log(`'${app.locals.title}' is running on http://localhost:${app.get('port')}.`);

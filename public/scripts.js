@@ -1,4 +1,4 @@
-// Functions
+// FUNCTIONS
 const formatDate = (date) => {
   const [year, month, day] = date.slice(0, 10).split('-');
   const newDate = `${month}-${day}-${year}`;
@@ -100,10 +100,6 @@ const updateLinkDOM = (link) => {
       <td class='view-link-date'>${formatDate(link.created_at)}</td>
     </tr>
   `);
-
-  // if ($(`.folder-links-${link.folderID}`).hasClass('hidden')) {
-  //   $('.folder-pane').trigger('click');
-  // }
 };
 
 const createFolder = () => {
@@ -173,11 +169,11 @@ const redirect = (linkID) => {
     .then(link => window.open(link));
 };
 
-// Setup
+// SETUP
 setupFolders();
 setupLinks('newest');
 
-// Event Listeners
+// EVENT LISTENERS
 $('.create-folder-form').on('submit', (e) => {
   e.preventDefault();
   createFolder();
