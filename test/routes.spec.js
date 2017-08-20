@@ -28,20 +28,14 @@ describe('Client Routes', () => {
 });
 
 describe('API Routes', () => {
-  before(() => {
+  before((done) => {
     knex.migrate.latest()
-      .then(done => done());
+      .then(() => done());
   });
 
-  beforeEach(() => {
-    knex.migrate.rollback()
-      .then(() => {
-        knex.migrate.latest()
-          .then(() => {
-            return knex.seed.run()
-              .then(done => done());
-          });
-      });
+  beforeEach((done) => {
+    knex.seed.run()
+      .then(() => done());
   });
 
   describe('GET /api/v1/folders', () => {
@@ -67,6 +61,7 @@ describe('API Routes', () => {
       chai.request(server)
         .post('/api/v1/folders')
         .send({
+          id: 4,
           folderName: 'Cute Dogs',
         })
         .end((error, response) => {
@@ -129,7 +124,7 @@ describe('API Routes', () => {
         .send({
           id: 4,
           linkLabel: 'Lessons',
-          linkLong: 'http://frontend.turing.io/lessons/‎',
+          linkLong: 'http://frontend.turing.io/lessons/',
           folderID: 3,
         })
         .end((error, response) => {
@@ -142,7 +137,7 @@ describe('API Routes', () => {
           response.body.should.have.property('linkLong');
           response.body.linkLong.should.equal('http://frontend.turing.io/lessons/');
           response.body.should.have.property('linkShort');
-          response.body.linkShort.should.equal('tbd');
+          response.body.linkShort.should.equal('jetfuel.com/1d3eac87');
           response.body.should.have.property('folderID');
           response.body.folderID.should.equal(3);
 
@@ -158,7 +153,7 @@ describe('API Routes', () => {
               response.body[3].should.have.property('linkLong');
               response.body[3].linkLong.should.equal('http://frontend.turing.io/lessons/');
               response.body[3].should.have.property('linkShort');
-              response.body[3].linkShort.should.equal('tbd');
+              response.body[3].linkShort.should.equal('jetfuel.com/1d3eac87');
               response.body[3].should.have.property('folderID');
               response.body[3].folderID.should.equal(3);
               done();
@@ -189,9 +184,8 @@ describe('API Routes', () => {
         .end((error, response) => {
           response.should.have.status(200);
           response.should.be.json;
-          response.body.should.be.a('object');
-          response.body.should.have.property('linkLong');
-          response.body.linkLong.should.equal('http://mgoblue.com/schedule.aspx?path=football');
+          response.body.should.be.a('string');
+          response.body.should.equal('http://mgoblue.com/schedule.aspx?path=football');
           done();
         });
     });
@@ -205,11 +199,11 @@ describe('API Routes', () => {
           response.should.have.status(200);
           response.should.be.json;
           response.body.should.be.a('array');
-          repsonse.body.length.should.equal(2);
+          response.body.length.should.equal(2);
           response.body[0].should.have.property('id');
           response.body[0].id.should.equal(1);
           response.body[0].should.have.property('linkLabel');
-          response.body[0].linkLabel.should.equal(Schedule);
+          response.body[0].linkLabel.should.equal('Schedule');
           response.body[0].should.have.property('linkLong');
           response.body[0].linkLong.should.equal('http://mgoblue.com/schedule.aspx?path=football');
           response.body[0].should.have.property('linkShort');
