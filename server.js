@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const shortHash = require('short-hash');
-// const moment = require('moment');
 
 const app = express();
 
