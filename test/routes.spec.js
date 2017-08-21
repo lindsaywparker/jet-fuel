@@ -45,8 +45,10 @@ describe('API Routes', () => {
         .end((error, response) => {
           response.should.have.status(200);
           response.should.be.json;
-          response.body.should.be.a('array');
-          response.body.length.should.equal(3);
+          // response.body.should.be.a('array');
+          response.body.should.be.a('string');
+          // response.body.length.should.equal(3);
+          response.body.length.should.equal(5);
           response.body[0].should.have.property('folderName');
           response.body[0].folderName.should.equal('Football');
           response.body[1].folderName.should.equal('Michigan');
