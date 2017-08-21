@@ -1,10 +1,3 @@
-/* ---- COLOR SCHEME ---- */
-/* primary:   #37274B     */
-/* secondary: #FFFFFF     */
-/* accent1:   #63F4CF     */
-/* accent2:   #981A5E, #C42179, #D92586     */
-/* inspiration: https://dribbble.com/shots/2040722-Engage-Prague-2015/attachments/362802*/
-
 * {
   box-sizing: border-box;
 }
@@ -22,6 +15,10 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+h3 {
+  margin-top: 5px;
 }
 
 h4, p {
@@ -48,7 +45,7 @@ h4, p {
 
 .section-title {
   width: 704px;
-  margin: auto auto 0;
+  margin: 10px auto 0;
 }
 
 .create-pane {
@@ -66,14 +63,14 @@ form {
   flex-direction: column;
   align-items: center;
   width: 350px;
-  height: 300px;
+  height: 360px;
   margin: 2px;
 }
 
 input, button {
   height: 30px;
   border: none;
-  border-radius: 15px;
+  border-radius: 5px;
   margin: 10px 0;
   font-size: 14px;
   outline: none;
@@ -86,7 +83,7 @@ input {
 }
 
 button {
-  width: 150px;
+  width: 175px;
   border: 1px solid #63F4CF;
   background-color: transparent;
   color: #63F4CF;
@@ -99,6 +96,25 @@ input:focus, button:focus {
 
 button:hover {
   box-shadow: 0 0 3pt 1pt #63F4CF;
+}
+
+.dropdown-container {
+  display: flex;
+  justify-content: space-between;
+  width: 275px;
+  margin: 10px 0;
+}
+
+#folder-dropdown {
+  width: 210px;
+  height: 30px;
+  border: none;
+  background-color: #D6DAE1;
+  font-size: 14px;
+}
+
+label {
+  margin: auto 0;
 }
 
 .folder-status-msg, .link-status-msg {
@@ -116,8 +132,9 @@ button:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 5px;
   padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
   background-color: #D6DAE1;
   color: #000;
   cursor: pointer;
@@ -125,9 +142,9 @@ button:hover {
 
 .hidden {
   display: block;
-  overflow: hidden;
-  height: 0;
   width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .sort-controls {
@@ -160,8 +177,8 @@ button:hover {
 }
 
 table {
-  min-width: 400px;
   width: 100%;
+  min-width: 400px;
   padding-left: 12px;
   border-radius: 15px;
   table-layout: fixed;
