@@ -14,7 +14,6 @@ app.set('port', process.env.PORT || 3000);
 
 const requireHTTPS = (req, res, next) => {
   if (!req.secure) {
-    console.log('redirecting to secure');
     return res.redirect(`https://${req.headers.host}${req.url}`);
   }
   next();
