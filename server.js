@@ -10,10 +10,17 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-console.log('WHATEVER');
-
 app.set('port', process.env.PORT || 3000);
 
+const requireHTTPS = (req, res, next) => {
+  if (!req.secure) {
+    console.log('redirecting to secure');
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+};
+
+app.use(requireHTTPS);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
