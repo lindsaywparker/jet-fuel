@@ -6,7 +6,24 @@
       "src": "./assets/logo.png",
       "type": "image/png",
       "sizes": "48x48"
+    },
+    {
+      "src": "./assets/logo.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "./assets/logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./assets/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
-  "start_url": "index.html?launcher=true"
+  "start_url": "index.html?launcher=true",
+  "background_color": "#63F4CF",
+  "theme_color": "#63F4CF"
 }
