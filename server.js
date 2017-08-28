@@ -12,14 +12,18 @@ const database = require('knex')(configuration);
 
 app.set('port', process.env.PORT || 3000);
 
-const requireHTTPS = (req, res, next) => {
-  if (!req.secure) {
-    return res.redirect(`https://${req.headers.host}${req.url}`);
-  }
-  return next();
-};
-
-app.use(requireHTTPS);
+// const requireHTTPS = (req, res, next) => {
+//   console.log(req.headers['x-forwarded-proto']);
+//   const schema = (req.headers['x-forwarded-proto'] || '').toLowerCase();
+//   console.log(schema);
+//   if (schema === 'https') {
+//     next();
+//   } else {
+//     res.redirect(`https://${req.headers.host}${req.url}`);
+//   }
+// };
+// 
+// app.use(requireHTTPS);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
