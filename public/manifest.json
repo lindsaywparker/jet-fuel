@@ -1,0 +1,12 @@
+{
+  "short_name": "JetFuel",
+  "name": "Jet Fuel LWP",
+  "icons": [
+    {
+      "src": "./assets/logo.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    }
+  ],
+  "start_url": "index.html?launcher=true"
+}
